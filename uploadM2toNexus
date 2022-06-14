@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+
+REPO_LOCATION=~/.m2/repository/
+
+find ${REPO_LOCATION} -type f \
+    -not -name "*repositories" \
+    -and -not -name '*.lastUpdated' \
+    -and -not -path '*.cache*' \
+    -and -not -path '*.meta*' | \
+    while read path; do
+    
+    # Adapt cut length acordingly
+    gavName=$(echo $path | cut -c 34-)  // cut path string
+    
+    # Adapt Path and Credentials accordingly
+    curl -v -u admin:admin123 --upload-file ${path} http:/localhost:8081/repository/central/${gavName}
+
+done
